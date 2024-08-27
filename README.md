@@ -12,8 +12,8 @@ goals:
 mvp / progress:
 
 
-- [ ]  Read dir to find main function
-- [ ]  Execute main function
+- [x]  Read dir to find main function
+- [x]  Execute main function
 - [ ]  Listen for changes in any files in dir
 - [ ]  Restart api
 - [ ]  0 downtime

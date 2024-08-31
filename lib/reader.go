@@ -1,9 +1,49 @@
 package lib
 
 import (
+	"io/fs"
 	"os"
 	"strings"
 )
+
+type PathStats []PathStat
+
+type PathStat struct {
+  Path string
+  Stats fs.FileInfo
+}
+
+// GET STATS TO LOOK FOR CHANGES
+func GetDirStats(root string, pathStats *PathStats) error {
+  entries, err := os.ReadDir(root)
+  if err != nil {
+    return err
+  }
+
+  for _, entry := range entries {
+    name := entry.Name()
+    path := root + "/" + name
+
+    if isHidden(name) {
+      continue
+    }
+    if entry.IsDir() {
+      GetDirStats(path, pathStats)
+    }
+    if !isGoFile(path) {
+      continue
+    }
+
+    stats, err := os.Stat(path)
+    if err != nil {
+      return err
+    }
+    pathStat := PathStat{ Path: path, Stats: stats }
+    *pathStats = append(*pathStats, pathStat)
+  }
+
+  return nil
+}
 
 // FIND MAIN FUNCTION
 func FindApiEntry(root string) (string, error) {
@@ -16,16 +56,18 @@ func FindApiEntry(root string) (string, error) {
 
   for _, entry := range entries {
     name := entry.Name()
+    path := root + "/" + name
+
     if isHidden(name) {
       continue
     }
     if entry.IsDir() {
-      FindApiEntry(name)
+      FindApiEntry(path)
     }
-    if !isGoFile(name) {
+    if !isGoFile(path) {
       continue
     }
-    path := root + "/" + name
+
     contents, err := os.ReadFile(path)
     if err != nil {
       return "", err

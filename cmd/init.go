@@ -6,7 +6,7 @@ import (
 	"github.com/eliasuran/gomon2/lib"
 )
 
-func Init() (string, error) {
+func Init(root string) (string, error) {
   fmt.Println("init")
   fmt.Print(`
  ██████╗  ██████╗ ███╗   ███╗ ██████╗ ███╗   ██╗
@@ -27,7 +27,7 @@ func Init() (string, error) {
   }
 
   // get root from user if flag
-  root := "."
+  // root := "."
   entry, err := lib.FindApiEntry(root)
   if err != nil {
     return "", err

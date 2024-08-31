@@ -2,21 +2,30 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"time"
+
+	"github.com/eliasuran/gomon2/lib"
 )
 
-func Run(apiEntryPath string) error {
+func Run(root string, apiEntryPath string) error {
   fmt.Println("run")
 
-  cmd := exec.Command("go", "run", apiEntryPath)
-  cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+  var initialStats lib.PathStats
+  err := lib.GetDirStats(root, &initialStats)
+  if err != nil {
+    return err
+  }
+  fmt.Println(initialStats)
 
-  err := cmd.Run()
+  _, err = lib.StartServer(apiEntryPath)
   if err != nil {
     return err
   }
 
-  return nil
+  for {
+    fmt.Println("listening cuh")
+
+
+    time.Sleep(5000 * time.Millisecond)
+  }
 }

@@ -8,12 +8,13 @@ import (
 
 // ALL ERROR HANDLING HERE FOR NOW
 func main() {
-  apiEntryPath, err := cmd.Init()
+  root := "."
+  apiEntryPath, err := cmd.Init(root)
   if err != nil {
     fmt.Printf("Error in init: %v\n", err)
   }
 
-  err = cmd.Run(apiEntryPath)
+  err = cmd.Run(root, apiEntryPath)
   if err != nil {
     fmt.Printf("Error in run: %v\n", err)
   }

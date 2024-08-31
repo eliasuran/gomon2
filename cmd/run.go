@@ -15,7 +15,6 @@ func Run(root string, apiEntryPath string) error {
   if err != nil {
     return err
   }
-  fmt.Println(initialStats)
 
   _, err = lib.StartServer(apiEntryPath)
   if err != nil {
@@ -25,7 +24,28 @@ func Run(root string, apiEntryPath string) error {
   for {
     fmt.Println("listening cuh")
 
+    var stats lib.PathStats
+    err := lib.GetDirStats(root, &stats)
+    if err != nil {
+      return err
+    }
 
-    time.Sleep(5000 * time.Millisecond)
+    changeFound := false
+
+    for _, item := range stats {
+      if changeFound {
+        break
+      }
+      for _, initialItem := range initialStats {
+        if item.Path == initialItem.Path && item.Stats.ModTime() != initialItem.Stats.ModTime() {
+          fmt.Println("A CHANGE WAS SPOTTED")
+          initialStats = stats
+          changeFound = true
+          break
+        }
+      }
+    }
+
+    time.Sleep(1000 * time.Millisecond)
   }
 }

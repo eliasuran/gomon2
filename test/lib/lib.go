@@ -6,5 +6,5 @@ import (
 )
 
 func Function(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintln(w, "COol function")
+  fmt.Fprintln(w, "xwdjwo function")
 }
